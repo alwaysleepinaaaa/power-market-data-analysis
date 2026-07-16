@@ -15,11 +15,7 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parent
-DATA_ROOT = (
-    ROOT
-    / "CLP_Wind_Farm_Data_Guangxian_20260713"
-    / "CLP_Wind_Farm_Data_Guangxian_20260713"
-)
+DATA_PATTERN = "冠县风电场_日前信息_*.xlsx"
 OUTPUT = ROOT / "冠县风电场_典型电价与新能源出力曲线.png"
 
 SELECTED_DAYS = [
@@ -29,9 +25,15 @@ SELECTED_DAYS = [
 
 
 def load_data() -> pd.DataFrame:
-    files = sorted(DATA_ROOT.glob("冠县风电场_日前信息_*.xlsx"))
+    files = sorted(
+        path
+        for path in ROOT.rglob(DATA_PATTERN)
+        if not path.name.startswith("~$")
+    )
     if not files:
-        raise FileNotFoundError(f"未在 {DATA_ROOT} 找到Excel数据。")
+        raise FileNotFoundError(
+            f"未在脚本所在目录及其子文件夹中找到 Excel 数据：{ROOT}"
+        )
 
     frames = []
     for path in files:
@@ -144,7 +146,7 @@ def draw_chart(data: pd.DataFrame) -> None:
     )
     fig.savefig(OUTPUT, dpi=220, bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"\n图像已输出：{OUTPUT}")
+    print(f"\n图像已输出：{OUTPUT}，这次修改仅用于github使用尝试。")
 
 
 def main() -> None:

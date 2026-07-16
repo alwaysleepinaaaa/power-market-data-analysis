@@ -16,11 +16,7 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parent
-DATA_ROOT = (
-    ROOT
-    / "CLP_Wind_Farm_Data_Guangxian_20260713"
-    / "CLP_Wind_Farm_Data_Guangxian_20260713"
-)
+DATA_PATTERN = "冠县风电场_日前信息_*.xlsx"
 
 FIGURE_1 = ROOT / "01_典型曲线_火电竞价空间相关性.png"
 FIGURE_2 = ROOT / "02_全样本分时价差与仓位倾向.png"
@@ -47,9 +43,15 @@ def configure_plotting() -> None:
 
 
 def load_data() -> pd.DataFrame:
-    files = sorted(DATA_ROOT.glob("冠县风电场_日前信息_*.xlsx"))
+    files = sorted(
+        path
+        for path in ROOT.rglob(DATA_PATTERN)
+        if not path.name.startswith("~$")
+    )
     if not files:
-        raise FileNotFoundError(f"未在{DATA_ROOT}找到冠县风电场Excel数据。")
+        raise FileNotFoundError(
+            f"未在脚本所在目录及其子文件夹中找到冠县风电场 Excel 数据：{ROOT}"
+        )
 
     frames = []
     for path in files:
