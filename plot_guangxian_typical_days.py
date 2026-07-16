@@ -147,6 +147,7 @@ def draw_chart(data: pd.DataFrame) -> None:
     fig.savefig(OUTPUT, dpi=220, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print(f"\n图像已输出：{OUTPUT}，这次修改仅用于github使用尝试。")
+    print("这是codex自己做的。")
 
 
 def main() -> None:
